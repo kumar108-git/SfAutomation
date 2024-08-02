@@ -1,6 +1,7 @@
 target/
 test-output/
 output/
+src/test/resources/config/default.properties
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
