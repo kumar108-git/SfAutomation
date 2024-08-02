@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  hub:
+    image: seleniarm/hub:latest
+    ports:
+      - 4444:4444
+  chrome:
+    image: seleniarm/node-chromium:latest
+    shm_size: '2g'
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=4
+  firefox:
+    image: seleniarm/node-firefox:latest
+    shm_size: '2g'
+    depends_on:
+      - hub
+    environment:
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+      - SE_NODE_MAX_SESSIONS=4
+  Salesforce:
+    image: vinay019/sfautomation:latest
+    depends_on:
+      - chrome
+    environment:
+      - BROWSER=chrome
+      - HUB_HOST=hub
+      - THREAD_COUNT=3
+      - TEST_SUITE=salesforce.xml
+    volumes:
+      - ./output/salesforce:/home/selenium-docker/test-output
